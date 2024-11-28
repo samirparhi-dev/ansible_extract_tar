@@ -1,0 +1,16 @@
+---
+- name: Ensure the tar file exists
+  ansible.builtin.stat:
+    path: "{{ tar_file }}"
+  register: tar_stat
+
+- name: Fail if the tar file does not exist
+  ansible.builtin.fail:
+    msg: "The tar file {{ tar_file }} does not exist"
+  when: not tar_stat.stat.exists
+
+- name: Extract tar file to destination folder
+  ansible.builtin.unarchive:
+    src: "{{ tar_file }}"
+    dest: "{{ destination_folder }}"
+    remote_src: yes
